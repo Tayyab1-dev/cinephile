@@ -1,4 +1,4 @@
-const API_KEY ="44365abd667cec707317b50c3a993c79";
+const API_KEY = import.meta.env.VITE_TMDB_KEY;  // <-- yahan change kiya
 const BASE_URL ="https://api.themoviedb.org/3";
 
 export const fetchTrendingMovies = async () => {
