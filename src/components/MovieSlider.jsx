@@ -10,29 +10,42 @@ function MovieSlider({ title, movies, subtitle = "" }) {
   const { openMoviesDetails } = useMovies();
 
   const scroll = (direction) => {
-    if (isScrolling) return;
-    setIsScrolling(true);
+    // FIX: Removed the 'if (isScrolling) return' check
+    // This allows touch scrolling to work immediately after a button scroll.
+
     const { current } = sliderRef;
+    if (!current) return; // Safety check
+
     const scrollAmount = (direction === "left"
       ? -current.clientWidth * 0.75
       : current.clientWidth * 0.75);
+      
+    // Temporarily set isScrolling to prevent multiple rapid button clicks
+    setIsScrolling(true); 
+
     current.scrollBy({
       left: scrollAmount,
       behavior: "smooth",
     });
+
+    // Reset isScrolling after the scroll animation is likely finished
     setTimeout(() => {
       setIsScrolling(false);
-    }, 500);
+    }, 500); 
   };
+  
   const formatRating = (rating) => {
     return (Math.round(rating * 10) / 10).toFixed(1);
   };
+  
   const handleMovieClick = (moviesId) => {
     openMoviesDetails(moviesId);
   };
+  
   if (!movies || movies.length === 0) {
     return null;
   }
+  
   return (
     <section className="py-12">
       <div className="container mx-auto px-4">
@@ -46,9 +59,10 @@ function MovieSlider({ title, movies, subtitle = "" }) {
           </div>
           <div className="flex space-x-2">
             <button
-              className=" p-2 rounded-full bg-neutral-800/70 hover:bg-neutral-700 text-white transition-all"
+              className=" p-2 rounded-full bg-neutral-800/70 hover:bg-neutral-700 text-white transition-all disabled:opacity-50"
               aria-label="Scroll left"
               onClick={() => scroll("left")}
+              disabled={isScrolling} // Disable button while scrolling
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -66,9 +80,10 @@ function MovieSlider({ title, movies, subtitle = "" }) {
               </svg>
             </button>
             <button
-              className="p-2 rounded-full bg-neutral-800/70 hover:bg-neutral-700 text-white transition-all"
+              className="p-2 rounded-full bg-neutral-800/70 hover:bg-neutral-700 text-white transition-all disabled:opacity-50"
               aria-label="Scroll right"
               onClick={() => scroll("right")}
+              disabled={isScrolling} // Disable button while scrolling
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -91,7 +106,9 @@ function MovieSlider({ title, movies, subtitle = "" }) {
         {/*Movie Slider*/}
         <div className="relative">
           <div
-            className=" flex space-x-4 overflow-hidden scrollbar-hide pb-4 snap-x"
+            // FIX: Removed 'overflow-hidden' to ensure touch scrolling is completely native and unrestricted.
+            // The scrollbar-hide utility still hides the scrollbar visually.
+            className=" flex space-x-4 scrollbar-hide pb-4 snap-x overflow-x-auto" 
             ref={sliderRef}
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
@@ -129,7 +146,7 @@ function MovieSlider({ title, movies, subtitle = "" }) {
                                 <path d="M9.049 2.927c-.3-.921-1.603-.921-1.902 0l-.758 2.343a1 1 0 01-.95.69H3.45c-.969 0-1.371 1.24-.588 1.81l1.958 1.42a1 1 0 01.364 1.118l-.75 2.293c-.3.92.755 1.688 1.54 1.118l1.958-1.42a1 1 0 011.175 0l1.958 1.42c.785.57 1.84-.197 1.54-1.118l-.75-2.293a1 1 0 01.364-1.118l1.958-1.42c.783-.57.38-1.81-.588-1.81h-2.689a1 1 0 01-.95-.69l-.758-2.343z" />
                               </svg>
                               <span className=" text-yellow-400 text-sm font-medium">
-                            {formatRating(movie.vote_average)}
+                                {formatRating(movie.vote_average)}
                               </span>
                             </div>
                             <span className="text-neutral-400 text-sm">
@@ -146,7 +163,7 @@ function MovieSlider({ title, movies, subtitle = "" }) {
                             >
                               <path
                                 fillRule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
                                 clipRule="evenodd"
                               />
                             </svg>
