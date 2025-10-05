@@ -1,26 +1,22 @@
-import { BottleWine, SettingsIcon } from "lucide-react";
 import React, { useState, useRef } from "react";
 import { getImageURL } from "../services/api";
 import { useMovies } from "../context/MoviesContext";
 
-function MovieSlider({ title, movies, subtitle = "" }) {
+// Destructure 'id' from the props
+function MovieSlider({ title, movies, subtitle = "", id }) { 
   const sliderRef = useRef(null);
   const [isScrolling, setIsScrolling] = useState(false);
   const [hoveredMovieId, setHoveredMoviesId] = useState(null);
   const { openMoviesDetails } = useMovies();
 
   const scroll = (direction) => {
-    // FIX: Removed the 'if (isScrolling) return' check
-    // This allows touch scrolling to work immediately after a button scroll.
-
     const { current } = sliderRef;
-    if (!current) return; // Safety check
+    if (!current) return; 
 
     const scrollAmount = (direction === "left"
       ? -current.clientWidth * 0.75
       : current.clientWidth * 0.75);
       
-    // Temporarily set isScrolling to prevent multiple rapid button clicks
     setIsScrolling(true); 
 
     current.scrollBy({
@@ -28,7 +24,6 @@ function MovieSlider({ title, movies, subtitle = "" }) {
       behavior: "smooth",
     });
 
-    // Reset isScrolling after the scroll animation is likely finished
     setTimeout(() => {
       setIsScrolling(false);
     }, 500); 
@@ -47,7 +42,8 @@ function MovieSlider({ title, movies, subtitle = "" }) {
   }
   
   return (
-    <section className="py-12">
+    // *** FIX: Apply the 'id' prop to the main section element ***
+    <section id={id} className="py-12">
       <div className="container mx-auto px-4">
         <div className="flex items-baseline justify-between mb-8">
           <div className="text-2xl md:text-3xl font-bold text-white">
@@ -106,8 +102,6 @@ function MovieSlider({ title, movies, subtitle = "" }) {
         {/*Movie Slider*/}
         <div className="relative">
           <div
-            // FIX: Removed 'overflow-hidden' to ensure touch scrolling is completely native and unrestricted.
-            // The scrollbar-hide utility still hides the scrollbar visually.
             className=" flex space-x-4 scrollbar-hide pb-4 snap-x overflow-x-auto" 
             ref={sliderRef}
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}

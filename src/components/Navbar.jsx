@@ -74,6 +74,25 @@ function Navbar() {
     setShowSearchResults(false);
     setSearchQuerry("");
   };
+  
+  // *** NEW: Smooth Scrolling Function ***
+  const handleNavLinkClick = (e, targetId) => {
+    e.preventDefault();
+    
+    // Close the mobile menu on click
+    if (isMobileMenuOpen) {
+      setIsMobileMenuOpen(false);
+    }
+
+    // Find the target element and scroll smoothly
+    const targetElement = document.getElementById(targetId);
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    // Update the URL hash
+    window.history.pushState(null, null, `#${targetId}`);
+  };
 
   return (
     <header
@@ -103,18 +122,22 @@ function Navbar() {
             <a
               href="#trending"
               className="text-white hover:text-purple-400 transition-all font-medium "
+              onClick={(e) => handleNavLinkClick(e, 'trending')}
             >
               Trending
             </a>
             <a
               href="#popular"
               className="text-white hover:text-purple-400 transition-all font-medium "
+              onClick={(e) => handleNavLinkClick(e, 'popular')}
             >
               Popular
             </a>
+            
             <a
               href="#top-rated"
               className="text-white hover:text-purple-400 transition-all font-medium "
+              onClick={(e) => handleNavLinkClick(e, 'top-rated')}
             >
               Top Rated
             </a>
@@ -270,25 +293,30 @@ function Navbar() {
           <div className="mt-4 pb-4 space-y-4 md:hidden">
             <a
               href="#"
-              className="block text-white hover:text-purple-400 transition-colors py-2 "
+              className="block text-white hover:text-purple-400 transition-colors py-2"
+              onClick={() => setIsMobileMenuOpen(false)}
             >
               Home
             </a>
             <a
               href="#trending"
-              className="text-white hover:text-purple-400 transition-all font-medium "
+              className="block text-white hover:text-purple-400 transition-colors py-2"
+              onClick={(e) => handleNavLinkClick(e, 'trending')}
             >
               Trending
             </a>
             <a
               href="#popular"
               className="text-white hover:text-purple-400 transition-all font-medium "
+              onClick={(e) => handleNavLinkClick(e, 'popular')}
             >
               Popular
             </a>
+           
             <a
               href="#top-rated"
               className="text-white hover:text-purple-400 transition-all font-medium "
+              onClick={(e) => handleNavLinkClick(e, 'top-rated')}
             >
               Top Rated
             </a>
@@ -404,4 +432,4 @@ function Navbar() {
   );
 }
 
-export default Navbar; 
+export default Navbar;

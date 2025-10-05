@@ -45,7 +45,7 @@ function MovieContent() {
           movies={popularMovies}
           id="popular"
         />
-        <GenreSection />
+        <GenreSection id="genre" />
           <MovieSlider
           title="Top-Rated Movies"
           subtitle="Highest rsted movies of all time"
@@ -53,7 +53,6 @@ function MovieContent() {
           id="top-rated"
         />
       </div>
-      {/*conditonal rendring*/}
       {selectedMovieId && <MoviesDetails movieId={selectedMovieId} onClose={closeMovieDetails}/>}
     </>
   );
